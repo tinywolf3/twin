@@ -1,4 +1,4 @@
-package winman_test
+package twin_test
 
 import (
 	"fmt"
@@ -6,9 +6,9 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	"github.com/epiclabs-io/winman"
-	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
+	"github.com/tinywolf3/tcell/v2"
+	"github.com/tinywolf3/tview"
+	"github.com/tinywolf3/twin"
 )
 
 type ScreenMonitor struct {
@@ -84,34 +84,34 @@ type Position struct {
 }
 
 type WindowTest struct {
-	wnd          *winman.WindowBase
+	wnd          *twin.WindowBase
 	buttonClicks []Position
 	lines        []string
 }
 
 var priv = NewBoringPrimitive('@')
 var wtests = []WindowTest{
-	{winman.NewWindow().SetRoot(priv), nil, []string{` ┌─────────────┐ `, ` │@@@@@@@@@@@@@│ `}},
-	{winman.NewWindow().SetRoot(priv).AddButton(&winman.Button{
+	{twin.NewWindow().SetRoot(priv), nil, []string{` ┌─────────────┐ `, ` │@@@@@@@@@@@@@│ `}},
+	{twin.NewWindow().SetRoot(priv).AddButton(&twin.Button{
 		Symbol:    'A',
-		Alignment: winman.ButtonLeft,
+		Alignment: twin.ButtonLeft,
 	}), []Position{{3, 0}}, []string{` ┌[A]──────────┐ `, ` │@@@@@@@@@@@@@│ `}},
-	{winman.NewWindow().SetRoot(priv).AddButton(&winman.Button{
+	{twin.NewWindow().SetRoot(priv).AddButton(&twin.Button{
 		Symbol:    'B',
-		Alignment: winman.ButtonRight,
+		Alignment: twin.ButtonRight,
 	}), []Position{{13, 0}}, []string{` ┌──────────[B]┐ `, ` │@@@@@@@@@@@@@│ `}},
-	{winman.NewWindow().SetRoot(priv).AddButton(&winman.Button{
+	{twin.NewWindow().SetRoot(priv).AddButton(&twin.Button{
 		Symbol:    'C',
-		Alignment: winman.ButtonRight,
-	}).AddButton(&winman.Button{
+		Alignment: twin.ButtonRight,
+	}).AddButton(&twin.Button{
 		Symbol:    'D',
-		Alignment: winman.ButtonLeft,
-	}).AddButton(&winman.Button{
+		Alignment: twin.ButtonLeft,
+	}).AddButton(&twin.Button{
 		Symbol:    'E',
-		Alignment: winman.ButtonRight,
-	}).AddButton(&winman.Button{
+		Alignment: twin.ButtonRight,
+	}).AddButton(&twin.Button{
 		Symbol:    'F',
-		Alignment: winman.ButtonLeft,
+		Alignment: twin.ButtonLeft,
 	}), []Position{{13, 0}, {3, 0}, {10, 0}, {6, 0}}, []string{` ┌[D][F]─[E][C]┐ `, ` │@@@@@@@@@@@@@│ `}},
 }
 
@@ -224,7 +224,7 @@ func delegate(p tview.Primitive) {
 
 func TestFocusDelegation(t *testing.T) {
 	root := NewBoringPrimitive('%')
-	wnd := winman.NewWindow()
+	wnd := twin.NewWindow()
 
 	hasFocus := wnd.HasFocus()
 	if hasFocus == true {
@@ -259,7 +259,7 @@ func TestFocusDelegation(t *testing.T) {
 }
 
 func TestWindowSettings(t *testing.T) {
-	wnd := winman.NewWindow()
+	wnd := twin.NewWindow()
 
 	if wnd.IsModal() {
 		t.Fatal("Expected window to be non-modal by default")

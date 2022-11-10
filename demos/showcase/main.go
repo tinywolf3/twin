@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/epiclabs-io/winman"
-	"github.com/rivo/tview"
+	"github.com/tinywolf3/tview"
+	"github.com/tinywolf3/twin"
 )
 
 func main() {
 
 	app := tview.NewApplication()
-	wm := winman.NewWindowManager()
+	wm := twin.NewWindowManager()
 
 	quitMsgBox := MsgBox("Confirmation", "Really quit?", []string{"Yes", "No"}, func(clicked string) {
 		if clicked == "Yes" {
@@ -30,10 +30,10 @@ func main() {
 		})
 	}
 
-	var createForm func(modal bool) *winman.WindowBase
+	var createForm func(modal bool) *twin.WindowBase
 	var counter = 0
 
-	setZ := func(wnd *winman.WindowBase, newZ int) {
+	setZ := func(wnd *twin.WindowBase, newZ int) {
 		go app.QueueUpdateDraw(func() {
 			newTopWindow := wm.Window(wm.WindowCount() - 2)
 			if newTopWindow != nil {
@@ -43,10 +43,10 @@ func main() {
 		})
 	}
 
-	createForm = func(modal bool) *winman.WindowBase {
+	createForm = func(modal bool) *twin.WindowBase {
 		counter++
 		form := tview.NewForm()
-		window := winman.NewWindow().
+		window := twin.NewWindow().
 			SetRoot(form).
 			SetResizable(true).
 			SetDraggable(true).
@@ -107,16 +107,16 @@ func main() {
 		title := fmt.Sprintf("Window%d", counter)
 		window.SetBorder(true).SetTitle(title).SetTitleAlign(tview.AlignCenter)
 		window.SetRect(2+counter*2, 2+counter, 50, 30)
-		window.AddButton(&winman.Button{
+		window.AddButton(&twin.Button{
 			Symbol:    'X',
-			Alignment: winman.ButtonLeft,
+			Alignment: twin.ButtonLeft,
 			OnClick:   quit,
 		})
 
-		var maxMinButton *winman.Button
-		maxMinButton = &winman.Button{
+		var maxMinButton *twin.Button
+		maxMinButton = &twin.Button{
 			Symbol:    '▴',
-			Alignment: winman.ButtonRight,
+			Alignment: twin.ButtonRight,
 			OnClick: func() {
 				if window.IsMaximized() {
 					window.Restore()

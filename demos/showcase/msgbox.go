@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/epiclabs-io/winman"
-	"github.com/rivo/tview"
+	"github.com/tinywolf3/tview"
+	"github.com/tinywolf3/twin"
 )
 
 // MsgBox creates a new modal message box
-func MsgBox(title, text string, buttons []string, callback func(clicked string)) *winman.WindowBase {
+func MsgBox(title, text string, buttons []string, callback func(clicked string)) *twin.WindowBase {
 
-	msgBox := winman.NewWindow()
+	msgBox := twin.NewWindow()
 	message := tview.NewTextView().SetText(text).SetTextAlign(tview.AlignCenter)
 	buttonBar := tview.NewFlex().
 		SetDirection(tview.FlexColumn)

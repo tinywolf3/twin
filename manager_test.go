@@ -1,12 +1,12 @@
-package winman_test
+package twin_test
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/epiclabs-io/winman"
-	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
+	"github.com/tinywolf3/tcell/v2"
+	"github.com/tinywolf3/tview"
+	"github.com/tinywolf3/twin"
 )
 
 // Focuser returns a setFocus function that remembers the primitive
@@ -32,8 +32,8 @@ func TestWindowManagerFocus(t *testing.T) {
 	var focusedPrimitive tview.Primitive
 	setFocus := Focuser(&focusedPrimitive)
 
-	wm := winman.NewWindowManager()
-	wndA := winman.NewWindow()
+	wm := twin.NewWindowManager()
+	wndA := twin.NewWindow()
 	r := wndA.GetRoot()
 	if r != nil {
 		t.Fatalf("Expected to get root=nil on newly instantiated Window, got %v", r)
@@ -77,7 +77,7 @@ func TestWindowManagerFocus(t *testing.T) {
 
 	// Test Z index get/set
 	wm.AddWindow(wndA) // add wndA again, should get z index 0
-	wndB := winman.NewWindow().SetRoot(rootB)
+	wndB := twin.NewWindow().SetRoot(rootB)
 	wm.AddWindow(wndB) // add wndB, should get z index 1 since it was added later
 
 	z := wm.GetZ(wndA)
@@ -167,12 +167,12 @@ func TestWindowManagerFocus(t *testing.T) {
 }
 
 func TestWindowManagerSetZ(t *testing.T) {
-	wm := winman.NewWindowManager()
+	wm := twin.NewWindowManager()
 
-	var windows []*winman.WindowBase
+	var windows []*twin.WindowBase
 	// add some windows
 	for i := 0; i < 10; i++ {
-		wnd := winman.NewWindow()
+		wnd := twin.NewWindow()
 		wm.AddWindow(wnd)
 		windows = append(windows, wnd)
 	}
@@ -187,7 +187,7 @@ func TestWindowManagerSetZ(t *testing.T) {
 	}
 
 	// Move Window 0 to the top:
-	wm.SetZ(windows[0], winman.WindowZTop)
+	wm.SetZ(windows[0], twin.WindowZTop)
 	// windows[0] must now have z index of the top (len(w)-1)
 	z := wm.GetZ(windows[0])
 	if z != wm.WindowCount()-1 {
@@ -203,7 +203,7 @@ func TestWindowManagerSetZ(t *testing.T) {
 	}
 
 	// Move Window 5 to the bottom:
-	wm.SetZ(windows[5], winman.WindowZBottom)
+	wm.SetZ(windows[5], twin.WindowZBottom)
 	// windows[5] must now have z index of the bottom (0)
 	z = wm.GetZ(windows[5])
 	if z != 0 {
@@ -226,13 +226,13 @@ func TestWindowManagerSetZ(t *testing.T) {
 
 	// set the Z for a non-added window should not change the above,
 	// i.e., it should be ignored:
-	wm.SetZ(winman.NewWindow(), 3)
+	wm.SetZ(twin.NewWindow(), 3)
 
 	// check nothing changed.
 	verifyIndices()
 }
 
-type Rect = winman.Rect
+type Rect = twin.Rect
 
 type WMDrawTest struct {
 	initial   Rect // initial Rect
@@ -240,8 +240,8 @@ type WMDrawTest struct {
 	maximized bool
 }
 
-var minW = winman.MinWindowWidth
-var minH = winman.MinWindowHeight
+var minW = twin.MinWindowWidth
+var minH = twin.MinWindowHeight
 
 var WMDrawTests = []WMDrawTest{
 	{Rect{5, 5, 7, 7}, Rect{5, 5, 7, 7}, false},       // window fits
@@ -258,11 +258,11 @@ var WMDrawTests = []WMDrawTest{
 }
 
 func TestWindowManagerDraw(t *testing.T) {
-	wm := winman.NewWindowManager()
-	var windows []*winman.WindowBase
+	wm := twin.NewWindowManager()
+	var windows []*twin.WindowBase
 	for _, wt := range WMDrawTests {
-		wnd := winman.NewWindow() // create a new window. Windows are not visible by default.
-		wm.AddWindow(wnd)         // add new window to wm.
+		wnd := twin.NewWindow() // create a new window. Windows are not visible by default.
+		wm.AddWindow(wnd)       // add new window to wm.
 		wnd.SetRect(wt.initial.Rect())
 		if wt.maximized {
 			wnd.Maximize()
@@ -272,7 +272,7 @@ func TestWindowManagerDraw(t *testing.T) {
 
 	// Add an additional window to test that
 	// giving it focus will move it to the top.
-	var testWindow winman.Window = wm.NewWindow()
+	var testWindow twin.Window = wm.NewWindow()
 
 	wm.SetZ(testWindow, 3)
 	z := wm.GetZ(testWindow)
@@ -312,7 +312,7 @@ func TestWindowManagerDraw(t *testing.T) {
 	// since WMDrawTests are not visible, their Rects should be the original ones.
 	// Draw() must not adjust hidden windows.
 	for i, wnd := range windows {
-		rect := winman.NewRect(wnd.GetRect())
+		rect := twin.NewRect(wnd.GetRect())
 		expectedRect := WMDrawTests[i].initial
 		if rect != expectedRect {
 			t.Fatalf("Expected window in test %d to have rect %s, got %s", i, expectedRect, rect)
@@ -327,7 +327,7 @@ func TestWindowManagerDraw(t *testing.T) {
 	// Now draw again and check if window rects were adjusted to fit:
 	wm.Draw(screen)
 	for i, wnd := range windows {
-		rect := winman.NewRect(wnd.GetRect())
+		rect := twin.NewRect(wnd.GetRect())
 		expectedRect := WMDrawTests[i].expected
 		if rect != expectedRect {
 			t.Fatalf("Expected window in test %d to have rect %s, got %s", i, expectedRect, rect)
@@ -352,7 +352,7 @@ type ClickTest struct {
 }
 
 func TestWindowManagerMouse(t *testing.T) {
-	wm := winman.NewWindowManager()
+	wm := twin.NewWindowManager()
 	wm.SetRect(0, 0, 20, 20)
 	screen := tcell.NewSimulationScreen("UTF-8")
 	screen.SetSize(20, 20)
@@ -401,7 +401,7 @@ func TestWindowManagerMouse(t *testing.T) {
 	}
 
 	var clickedId int
-	var windows []*winman.WindowBase
+	var windows []*twin.WindowBase
 	var focusedPrimitive tview.Primitive
 	setFocus := Focuser(&focusedPrimitive)
 
@@ -454,7 +454,7 @@ func TestWindowManagerMouse(t *testing.T) {
 	}
 
 	for i, wnd := range windows {
-		finalRect := winman.NewRect(wnd.GetRect())
+		finalRect := twin.NewRect(wnd.GetRect())
 		if finalRect != testWindowRects[i].final {
 			t.Fatalf("Expected window #%d to have a final rect of %s, got %s", i, testWindowRects[i].final, finalRect)
 		}
@@ -474,9 +474,9 @@ func (ktp *KeyTestPrimitive) InputHandler() func(event *tcell.EventKey, setFocus
 }
 
 func TestWindowManagerKeyboard(t *testing.T) {
-	wm := winman.NewWindowManager()
+	wm := twin.NewWindowManager()
 	wm.SetRect(0, 0, 20, 20)
-	var windows []*winman.WindowBase
+	var windows []*twin.WindowBase
 	// add a few windows
 	// windows start all hidden
 	for i := 0; i < 5; i++ {
@@ -521,7 +521,7 @@ func TestWindowManagerKeyboard(t *testing.T) {
 	}
 
 	// Change #3's Z to be highest, so it should get the keypress
-	wm.SetZ(wnd3, winman.WindowZTop)
+	wm.SetZ(wnd3, twin.WindowZTop)
 	inputHandler(testEventKey, testSetFocus)
 	if lastPrimitive != wnd3.GetRoot() {
 		t.Fatal("Expected last keypress to have gone to window3's root")
@@ -535,7 +535,7 @@ type TestCenterWindow struct {
 }
 
 func TestCenter(t *testing.T) {
-	wm := winman.NewWindowManager()
+	wm := twin.NewWindowManager()
 	wm.SetRect(0, 0, 20, 20)
 
 	testWindowRects := []TestCenterWindow{
@@ -549,7 +549,7 @@ func TestCenter(t *testing.T) {
 		wnd := wm.NewWindow()
 		wnd.SetRect(tw.initial.Rect())
 		wm.Center(wnd)
-		finalRect := winman.NewRect(wnd.GetRect())
+		finalRect := twin.NewRect(wnd.GetRect())
 		if finalRect != tw.final {
 			t.Fatalf("Expected window #%d to have a final rect of %s, got %s", i, tw.final, finalRect)
 		}
@@ -558,14 +558,14 @@ func TestCenter(t *testing.T) {
 }
 
 func TestMaximizeRestore(t *testing.T) {
-	wm := winman.NewWindowManager()
+	wm := twin.NewWindowManager()
 	wm.SetRect(0, 0, 20, 20)
 
 	screen := tcell.NewSimulationScreen("UTF-8")
 	screen.SetSize(20, 20)
 	screen.Init()
 
-	initialRect := winman.NewRect(1, 2, 5, 9)
+	initialRect := twin.NewRect(1, 2, 5, 9)
 
 	wndA := wm.NewWindow()
 	wndA.SetRect(initialRect.Rect())
@@ -575,8 +575,8 @@ func TestMaximizeRestore(t *testing.T) {
 	wndA.Maximize()
 	wm.Draw(screen)
 
-	maximizedRect := winman.NewRect(wndA.GetRect())
-	wmSize := winman.NewRect(wm.GetInnerRect())
+	maximizedRect := twin.NewRect(wndA.GetRect())
+	wmSize := twin.NewRect(wm.GetInnerRect())
 	if maximizedRect != wmSize {
 		t.Fatalf("Expected wndA maximized rect to be %s, got %s", wmSize, maximizedRect)
 	}
@@ -584,7 +584,7 @@ func TestMaximizeRestore(t *testing.T) {
 	wndA.Restore()
 	wm.Draw(screen)
 
-	restoredRect := winman.NewRect(wndA.GetRect())
+	restoredRect := twin.NewRect(wndA.GetRect())
 	if restoredRect != initialRect {
 		t.Fatalf("Expected wndA restored rect to be the initial rect %s, got %s", initialRect, restoredRect)
 	}
@@ -592,7 +592,7 @@ func TestMaximizeRestore(t *testing.T) {
 }
 
 func TestModal(t *testing.T) {
-	wm := winman.NewWindowManager()
+	wm := twin.NewWindowManager()
 	wm.SetRect(0, 0, 100, 100)
 	screen := tcell.NewSimulationScreen("UTF-8")
 	screen.SetSize(100, 100)
@@ -633,7 +633,7 @@ func TestModal(t *testing.T) {
 	// now mark window 4 as modal.
 	// only window 4 should get clicks
 	w4 := wm.Window(4)
-	w4.(*winman.WindowBase).SetModal(true)
+	w4.(*twin.WindowBase).SetModal(true)
 	setFocus(w4)
 	wm.Draw(screen)
 

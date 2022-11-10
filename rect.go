@@ -1,4 +1,4 @@
-package winman
+package twin
 
 import "fmt"
 

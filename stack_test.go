@@ -1,13 +1,13 @@
-package winman_test
+package twin_test
 
 import (
 	"strings"
 	"testing"
 
-	"github.com/epiclabs-io/winman"
+	"github.com/tinywolf3/twin"
 )
 
-func dump(s winman.Stack) string {
+func dump(s twin.Stack) string {
 	var b strings.Builder
 	for _, e := range s {
 		b.WriteRune(e.(rune))
@@ -15,7 +15,7 @@ func dump(s winman.Stack) string {
 	return b.String()
 }
 
-func checkDump(t *testing.T, s winman.Stack, expected string) {
+func checkDump(t *testing.T, s twin.Stack, expected string) {
 	actual := dump(s)
 	if actual != expected {
 		t.Fatalf("Expected stack to contain %q, got %q", expected, actual)
@@ -23,7 +23,7 @@ func checkDump(t *testing.T, s winman.Stack, expected string) {
 }
 
 func TestStack(t *testing.T) {
-	var s winman.Stack
+	var s twin.Stack
 
 	e := s.Pop()
 	if e != nil {

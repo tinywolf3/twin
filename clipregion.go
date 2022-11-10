@@ -1,6 +1,6 @@
-package winman
+package twin
 
-import "github.com/gdamore/tcell/v2"
+import "github.com/tinywolf3/tcell/v2"
 
 // ClipRegion implements tcell.Screen and only allows setting content within
 // a defined region

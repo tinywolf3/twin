@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/epiclabs-io/winman"
-	"github.com/rivo/tview"
+	"github.com/tinywolf3/tview"
+	"github.com/tinywolf3/twin"
 )
 
-func calculator() *winman.WindowBase {
+func calculator() *twin.WindowBase {
 
 	value := []float64{0.0, 0.0}
 	i := 0
@@ -85,10 +85,10 @@ func calculator() *winman.WindowBase {
 		grid.AddItem(newCalcButton(b), row, col, 1, 1, 1, 1, true)
 	}
 
-	wnd := winman.NewWindow().SetRoot(grid)
-	wnd.AddButton(&winman.Button{
+	wnd := twin.NewWindow().SetRoot(grid)
+	wnd.AddButton(&twin.Button{
 		Symbol:    'X',
-		Alignment: winman.ButtonLeft,
+		Alignment: twin.ButtonLeft,
 		OnClick:   func() { wnd.Hide() },
 	})
 	wnd.SetRect(0, 0, 30, 15)

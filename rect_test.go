@@ -1,13 +1,13 @@
-package winman_test
+package twin_test
 
 import (
 	"testing"
 
-	"github.com/epiclabs-io/winman"
+	"github.com/tinywolf3/twin"
 )
 
 func TestRect(t *testing.T) {
-	r := winman.NewRect(1, 2, 3, 4)
+	r := twin.NewRect(1, 2, 3, 4)
 	x, y, w, h := r.Rect()
 	if !(x == 1 && y == 2 && w == 3 && h == 4) {
 		t.Fatalf("Expected x=1, y=2, w=3 and h=4. Got x=%d, y=%d, h=%d, w=%d", x, y, w, h)

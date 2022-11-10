@@ -18,4 +18,4 @@ Any tview.Primitive can be added to a window.
 
 
 */
-package winman
+package twin

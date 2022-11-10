@@ -1,4 +1,4 @@
-package winman
+package twin
 
 // ButtonSide determines the alignment of a window button
 type ButtonSide int16

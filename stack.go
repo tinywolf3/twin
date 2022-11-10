@@ -1,4 +1,4 @@
-package winman
+package twin
 
 // Stack represents a stack of unique items
 type Stack []interface{}
